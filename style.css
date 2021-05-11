@@ -1,0 +1,22 @@
+*{
+    margin: 0;
+    padding: 0;
+    
+}
+#canvas{
+    height: 100vh;
+    /* border: 1px solid red; */
+    position: relative;
+}
+
+.create-div{
+    position: absolute;
+    border: 1px solid red;
+    width: 6px;
+    height: 6px;
+    margin-left: -3px ;
+    margin-top: -3px;
+    border-radius: 50%;
+    background-color: black;
+}
+
