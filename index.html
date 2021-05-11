@@ -10,43 +10,69 @@
 <body>
     <!-- <div id="canvas"></div> -->
     <canvas id="canvas"></canvas>
+    <div id="down-right">
+        <span>线条宽度：</span><input type="range" min="1" max="20" value="10" id="fontsize" >
+        <br>
+        <span>线条颜色：</span><input type="color" id="colorValue">
+
+    </div>
 </body>
 <script>
-    let canvas = document.getElementById("canvas");
-    canvas.width = document.documentElement.clientWidth ;
-    canvas.height = document.documentElement.clientHeight ;
-    let painting = false;
-    let ctx = canvas.getContext("2d");
-    ctx.fillStyle = "blue"
-    var isTouchDevice = 'ontouchstart' in document.documentElement;
-    if(isTouchDevice){
+    let canvas = document.querySelector("#canvas");
+    canvas.height = document.documentElement.clientHeight;
+    canvas.width = document.documentElement.clientWidth;
+    let ctx =canvas.getContext('2d');
+    let lastX;
+    let lastY;
+    ctx.lineWidth = 10;
+    
+    ctx.lineCap = "round";
+    const isMobile = "ontouchstart" in window;
+    if(isMobile){
+        
+        canvas.ontouchstart = (e) => {
+            lastX = e.touches[0].clientX;
+            lastY = e.touches[0].clientY;
+        }
         canvas.ontouchmove = (e) => {
-            let x = e.touches[0].clientX;
-            let y = e.touches[0].clientY;
-            ctx.beginPath();
-            ctx.arc(x, y, 10, 0, 2*Math.PI);
+            ctx.moveTo(lastX, lastY);
+            lastX = e.touches[0].clientX;
+            lastY = e.touches[0].clientY;
+            ctx.lineTo(lastX, lastY);
             ctx.stroke();
-            ctx.fill()
         }
     } else {
-        canvas.onmousedown = () => {
-            painting = true
-        }
-        canvas.onmouseup = () => {
-            painting = false
-        }
-
+        let isDown = false;
+        canvas.onmousedown = (e) => {
+            ctx.beginPath();
+            lastX = e.clientX;
+            lastY = e.clientY;
+            isDown = true;
+        } 
         canvas.onmousemove = (e) => {
-            if(painting === true){
-                // ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10);
-                ctx.beginPath();
-                ctx.arc(e.clientX, e.clientY, 10, 0, 2*Math.PI);
+            if(isDown){
+                ctx.moveTo(lastX, lastY);
+                lastX = e.clientX;
+                lastY = e.clientY;
+                ctx.lineTo(lastX, lastY);
                 ctx.stroke();
-                ctx.fill()
             }
         }
+        canvas.onmouseup = (e) => {
+            isDown = false;
+        }
     }
-
-
+    fontsize.addEventListener(
+        'input',
+        (e) => {
+            ctx.lineWidth = fontsize.value;
+        }
+    )
+    colorValue.addEventListener(
+        'input', 
+        () => {
+            ctx.strokeStyle = colorValue.value
+        }   
+    )
 </script>
 </html>
