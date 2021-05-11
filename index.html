@@ -8,16 +8,40 @@
     <link href="./style.css" rel="stylesheet">
 </head>
 <body>
-    <div id="canvas"></div>
+    <!-- <div id="canvas"></div> -->
+    <canvas id="canvas"></canvas>
 </body>
 <script>
-    canvas.onclick = (e) => {
-        console.log(e);
-        let div = document.createElement("div");
-        div.classList.add('create-div');
-        div.style.left = e.clientX + 'px';
-        div.style.top = e.clientY + 'px';
-        canvas.appendChild(div)
+    let canvas = document.getElementById("canvas");
+    canvas.width = document.documentElement.clientWidth ;
+    canvas.height = document.documentElement.clientHeight ;
+    // canvas.onclick = (e) => {
+    //     console.log(e);
+    //     let div = document.createElement("div");
+    //     div.classList.add('create-div');
+    //     div.style.left = e.clientX + 'px';
+    //     div.style.top = e.clientY + 'px';
+    //     canvas.appendChild(div)
+    // }
+    //   var canvas = document.getElementById("canvas");
+    let painting = false;
+
+    canvas.onmousedown = () => {
+        painting = true
+    }
+    canvas.onmouseup = () => {
+        painting = false
+    }
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = "blue"
+    canvas.onmousemove = (e) => {
+        if(painting === true){
+            // ctx.fillRect(e.clientX - 5, e.clientY - 5, 10, 10);
+            ctx.beginPath();
+            ctx.arc(e.clientX, e.clientY, 10, 0, 2*Math.PI);
+            ctx.stroke();
+            ctx.fill()
+        }
     }
 </script>
 </html>
